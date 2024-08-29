@@ -1,0 +1,132 @@
+﻿@model IEnumerable<News>
+
+
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["controller"]?.ToString();
+    // Layout = "_Layout";
+}
+
+<partial name="Partial/_datatables-css"></partial>
+
+<link href="~/css/media.css" rel="stylesheet" />
+ 
+@await Component.InvokeAsync("NewsCount") 
+
+<div class="row" style="min-height:63vh;">
+    @if (Model.Any())
+    {
+        <P>
+            <a asp-action="Create" class="btn btn-primary mt-3">Create News</a>
+        </P>
+        <table id="table1" class="display table  table-hover table-striped table-bordered w-100">
+            <thead class=" table-primary">
+                <tr>
+                    <th class="text-center">
+                        N
+                    </th>
+                    <th>
+                       @*  @Html.DisplayNameFor(model => model.State) *@
+                        Active
+                    </th>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Posted
+                    </th>
+                    <th>
+                        Modified
+                    </th>
+                    <th>
+                        Section
+                    </th>
+                    <th class="">
+                        Photo
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 0;
+                    foreach (var item in Model)
+                    {
+                        i++;
+                        <tr class="text-center">
+                            <td class="text-center">
+                                <span class="ms-3">@i</span>
+                            </td>
+
+                            @if (item.State)
+                            {
+                                <td>
+                                    <div style="background-color:#c1f63e;height:30px;">
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <div style="background-color:#fb6c6c;height:30px;">
+                                    </div>
+                                </td>
+                            }
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="">
+                                    @item.Title?.Substring(0, Math.Min(item.Title.Length, 30))...
+                                </a>
+                            </td>
+                            <td>
+                                @*@Html.DisplayFor(modelItem => @item.CreatedDate.ToShortDateString()) سيعطي Error*@
+                                @* @item.Created.ToShortDateString()*@
+                                @*@Html.DisplayFor(modelItem => @item.Created)*@
+
+                                <small>@item.Created.ToString("dd-MM-yyyy hh:mm tt")</small>
+                            </td>
+                            <td>
+                                <small>@item.Modified?.ToString("dd-MM-yyyy hh:mm tt")</small>
+                            </td>
+                            <td>
+                                @item.Sections.Name
+                            </td>
+                            <td class="text-center ">
+                                @if (item.ImageUrl != null)
+                                {
+                                    <img src="~/Pictures/news/@item.ImageUrl" style="width:100px;height:80px" class="img-thumbnail" />
+                                }
+                                else
+                                {
+                                    <img src="~/img/news.jpg" style="width: 100px; height: 80px " class="img-thumbnail" />
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                No news in this section
+            </div>
+            <div class="card-body">
+                <a asp-action="Create" asp-controller="News" asp-route-sectionId="@ViewBag.SectionId" class="btn btn-primary">Create news</a>
+            </div>
+        </div>
+    }
+
+</div>
+
+<partial name="Partial/_datatables-js"></partial>
+
+
+<script>
+    var table = new DataTable('#table1', {
+        language: {
+               // url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/ar.json',
+        },
+    scrollX: true
+    });
+
+</script>

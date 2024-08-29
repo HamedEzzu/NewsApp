@@ -1,0 +1,77 @@
+﻿@model NewsVM
+
+@{
+    ViewData["Title"] = "News";
+}
+
+<div class="container">
+    <div class="row mt-5 ps-2 pe-2">
+        <div class="text-center p-2 bg-white">
+            <h2>@Model.News.Sections.Name</h2>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-between mt-4">
+        <div class="col-md-7 mb-4 mb-md-0">
+            <div class="bg-white p-4">
+                <div class="col-md-6">
+                    @if (Model.News.ImageUrl != null)
+                    {
+                        <img src="~/pictures/news/@Model.News.ImageUrl" class="w-100 img-thumbnail" alt="..." style="height:250px;">
+
+                    }
+                    else
+                    {
+                        <img src="~/img/bg-masthead.jpg" class="w-100 img-thumbnail" alt="..." style="height:250px;">
+                    }
+                </div>
+                <div class="col-12 mb-2">
+                    <h3 class="mt-2">@Model.News.Title</h3>
+                    <small>@Model.News.Created.ToString("dd-MM-yyyy")</small>
+                    <hr />
+                    <span> @Model.News.Details</span>
+                    <br />
+                    <span> This is a wider card with supporting text below as a natural1 This is a wider card with supporting text below as a natural2</span>  <br />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5  mb-5 ">
+            <div class="p-4 bg-white">
+                @{
+                    if (Model.NewsList.Count != 0)
+                    {
+                        foreach (var item in Model.NewsList)
+                        {
+                            <a asp-action="News" asp-controller="Home" asp-route-id="@item.Id" class="text-decoration-none">
+                                <div class="card mb-4 w-100 border cardhover ">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            @if (item.ImageUrl != null)
+                                            {
+                                                <img src="~/pictures/news/@item.ImageUrl" class="img-fluid  h-100 w-100" alt="..." style="max-height:150px;">
+
+                                            }
+                                            else
+                                            {
+                                                <img src="~/img/bg-masthead.jpg" class="img-fluid  h-100 w-100" alt="..." style="max-height:150px;">
+                                            }
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title">@item.Title.Substring(0, Math.Min(item.Title.Length, 30))...</h5>
+                                                @*<p class="card-text">@item.Details.Substring(0, Math.Min(item.Details.Length, 50))...</p>*@
+                                                <p class="card-text"><small class="text-body-secondary">@item.Created.ToString("dd-MM-yyyy")</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

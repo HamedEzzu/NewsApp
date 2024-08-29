@@ -1,0 +1,205 @@
+﻿@model List<Section>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- Latest News Start-->
+<div class="container-fluid latest-news pb-5 bg-black">
+    <h1 class="mb-5 text-white-50">Latest News</h1>
+    <div class="latest-news-carousel owl-carousel">
+        @{
+            @foreach (var item in Model)
+            {
+                foreach (var news in item.News)
+                {
+                    <div class="latest-news-item border border-left border-opacity-50 ">
+                        <div class="bg-light">
+                            <div class="overflow-hidden">
+                                @if (news.ImageUrl != null)
+                                {
+                                    <img src="~/Pictures/news/@news.ImageUrl" class="img-zoomin img-fluid w-100" style="height:150px;object-fit:cover;filter: brightness(0.7);" />
+                                }
+                                else
+                                {
+                                    <img src="~/img/news.jpg" class="img-zoomin img-fluid w-100" style="height:150px;object-fit:cover;filter: brightness(0.7);" alt="" />
+                                }
+                            </div>
+                            <div class="d-flex flex-column p-4">
+                                <a asp-action="News" asp-controller="Home" asp-route-id="@news.Id" class="h4">@news.Title?.Substring(0, Math.Min(news.Title.Length, 30))...</a>
+                                <div class="d-flex justify-content-between">
+                                    <a href="#" class="small text-body link-hover">@item.Name</a>
+                                    <small class="text-body d-block"><i class="fas fa-calendar-alt me-1"></i>@news.Created.ToString("dd-MM-yyyy")</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+<!-- Latest News End -->
+
+<div class="row text-center mt-5 pt-5 mb-5">
+    <h1>News Sections</h1>
+</div>
+
+<div class="container-fluid">
+    <div class=" row d-flex justify-content-between ">
+        <div class="col-md-4 mt-5">
+            <!--  News Sections Start -->
+            <div class="py-3 mb-4 p-2 bg-white" style="overflow-y: scroll;height:1140px;">
+                @{
+                    foreach (var item in Model)
+                    {
+                        <div class="d-flex align-items-center justify-content-between bg-light py-2 px-4 mb-3 shadow">
+                            <a asp-action="Section" asp-controller="Home" asp-route-Id="@item.Id" class="text-decoration-none"> 
+                                 <h3 class="m-0">@item.Name <small>(@item.News.Count())</small> </h3>
+                            </a>
+                            @* <a class="text-secondary font-weight-medium text-decoration-none" href="">View All</a>*@
+                        </div>
+
+                        <div class="owl-carousel owl-carousel-3 carousel-item-1 position-relative mb-5 shadow">
+                            @{
+
+                                foreach (var newsItem in item.News)
+                                {
+
+                                    <a asp-action="News" asp-controller="Home" asp-route-id="@newsItem.Id">
+                                        <div class="position-relative overflow-hidden " style="height:250px;">
+                                            @if (newsItem.ImageUrl != null)
+                                            {
+                                                <img src="~/Pictures/news/@newsItem.ImageUrl" class="img-fluid w-100 h-100" style="object-fit:cover;" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/img/news.jpg" class="img-fluid w-100 h-100" style="object-fit:cover;" />
+                                            }
+                                            <div class="overlay">
+                                                <h3 class="h4 text-white mb-3" href=""> @newsItem.Title?.Substring(0, Math.Min(newsItem.Title.Length, 30))...</h3>
+                                                <div class="mb-1" style="font-size: 13px;">
+                                                    <span class="text-white" href="">@item.Name</span>
+                                                    <span class="px-1 text-white">/</span>
+                                                    @if (newsItem.Modified == null)
+                                                    {
+                                                        <span class="text-white" href="">@newsItem.Created.ToString("dd-MM-yyyy")</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-white" href="">@newsItem.Modified?.ToString("dd-MM-yyyy")</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                }
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            <!--  News Sections End -->
+        </div>
+        <!--  Featured News Start -->
+        <div class="col-md-6 mt-5">
+            <div class="text-center p-3 bg-white">
+                <h1>Featured News</h1>
+            </div>
+           
+            <div id="carouselExampleDark" class="carousel slide carousel-fade " data-bs-ride="carousel" style="">
+                <div class="carousel-inner">
+                    @foreach (var item in Model)
+                    {
+                        foreach (var newsItem in item.News)
+                        {
+                            <a asp-action="News" asp-controller="Home" asp-route-id="@newsItem.Id">
+                                <div class="carousel-item active" data-bs-interval="1000">
+
+
+                                    @if (newsItem.ImageUrl != null)
+                                    {
+                                        <img src="~/Pictures/news/@newsItem.ImageUrl" class="d-block w-100 newsCarouselImg " style="object-fit:cover;filter: brightness(0.7);height:500px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/img/news.jpg" class="d-block w-100 newsCarouselImg" style="object-fit:cover;filter: brightness(0.7);height:500px;" />
+                                    }
+
+
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h2 class="text-light">@newsItem.Title?.Substring(0, Math.Min(newsItem.Title.Length, 30))...</h2>
+                                        <p class="text-white-50">@item.Name</p>
+                                        <small class="text-white-50">@newsItem.Created.ToString("dd-MM-yyyy")</small>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div id="divmarquee" class="border  d-flex p-3 bg-white mt-5">
+                <marquee width="100%" scrollamount=5 align="left" direction="up" loop="infinite" style="height:470px;padding:10px;">
+                    @foreach (var item in Model)
+                    {
+                        <div class="text-center m-5">
+                            <span class="fs-4 text-black-70 text-secondry"><b>@item.Name</b></span>
+                        </div>
+                        foreach (var newsItem in item.News)
+                        {
+                            <a asp-action="News" asp-controller="Home" asp-route-id="@newsItem.Id" class="text-decoration-none">
+                                <div class="card mb-5 w-100 cardhover">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            @if (newsItem.ImageUrl != null)
+                                            {
+                                                <img src="~/Pictures/news/@newsItem.ImageUrl" class="img-fluid rounded-start w-100 h-100" style="max-height:150px;" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/img/news.jpg" class="img-fluid rounded-start w-100 h-100" style="max-height:150px;" />
+                                            }
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title">@newsItem.Title?.Substring(0, Math.Min(newsItem.Title.Length, 30))...</h5>
+                                                <p class="card-text">@newsItem.Details?.Substring(0, Math.Min(newsItem.Details.Length, 50))...</p>
+                                                <p class="card-text"><small class="text-body-secondary">@newsItem.Created.ToString("dd-MM-yyyy")</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                        }
+                    }
+                </marquee>
+            </div>
+        </div>
+        <!--  Featured News End -->
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <marquee width="100%" scrollamount=12 align="left" direction="left" loop="infinite" class="mt-5" style="background-color:#F8F9FA">
+        <div class="p-2">
+            @{
+                @foreach (var item in Model)
+                {
+                    <span class="m-5 fs-4 text-black-70 text-success"><b>@item.Name</b></span>
+                    foreach (var newsItem in item.News)
+                    {
+                        <span class="me-5 fs-4">@newsItem.Title</span>
+                    }
+                }
+            }
+
+        </div>
+    </marquee>
+</div>
+
